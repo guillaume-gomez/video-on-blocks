@@ -14,7 +14,7 @@ loadingManager.onStart = () =>
 }
 loadingManager.onLoad = () =>
 {
-    console.log('loading finished')
+    console.log('l oading finished')
 }
 loadingManager.onProgress = () =>
 {
@@ -28,13 +28,6 @@ loadingManager.onError = () =>
 const textureLoader = new THREE.TextureLoader(loadingManager)
 const colorTexture = textureLoader.load('/textures/uv.jpg');
 
-const video = document.getElementById( 'video' ) as HTMLVideoElement;
-if(!video) {
-    throw new Error("cannot find the video");
-}
-video.play();
-
-const videoTexture = new THREE.VideoTexture(video);
 
 // Sizes
 const sizes = {
@@ -64,22 +57,6 @@ const secondCamera = new THREE.PerspectiveCamera(45, 1, 0.01, 5)
   const helper = new THREE.CameraHelper(secondCamera)
   scene.add(helper)
 
-
-const otherMaterial = new ProjectedMaterial({
-    camera: secondCamera,
-    texture: videoTexture,
-    color: 0x3149D5,
-})
-
-let objects : THREE.Mesh[] = [];
-for(let x = -2; x <= 2; x++) {
-    for(let y = -2; y <= 2; y++) {
-        const mesh = new THREE.Mesh(geometry, otherMaterial);
-        mesh.position.set(x * 1.0, y * 1.0, Math.random() * -3);
-        objects.push(mesh);
-        scene.add(mesh);
-    }
-}
 
 //Lights
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
@@ -137,6 +114,30 @@ function tick()
 
 
 window.onload = () => {
+    const video = document.getElementById( 'video' ) as HTMLVideoElement;
+    if(!video) {
+        throw new Error("cannot find the video");
+    }
+    video.play();
+    const videoTexture = new THREE.VideoTexture(video);
+
+    const otherMaterial = new ProjectedMaterial({
+        camera: secondCamera,
+        texture: videoTexture,
+        color: 0x3149D5,
+    })
+
+    let objects : THREE.Mesh[] = [];
+    for(let x = -2; x <= 2; x++) {
+        for(let y = -2; y <= 2; y++) {
+            const mesh = new THREE.Mesh(geometry, otherMaterial);
+            mesh.position.set(x * 1.0, y * 1.0, Math.random() * -3);
+            objects.push(mesh);
+            scene.add(mesh);
+        }
+    }
+
+
     tick();
 }
 
