@@ -48,6 +48,13 @@ scene.add(camera);
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 const material = new THREE.MeshStandardMaterial({ map: colorTexture , color: 0x00Afff, wireframe: false });
 
+const plane = new THREE.PlaneGeometry(10,10);
+
+const planeMesh = new THREE.Mesh(plane, material);
+planeMesh.rotateX(-Math.PI/2);
+planeMesh.position.set(0,-2,0);
+scene.add(planeMesh);
+
 
 const secondCamera = new THREE.PerspectiveCamera(45, 1, 0.01, 5)
   secondCamera.position.set(0, 0, 5)
@@ -127,9 +134,10 @@ window.onload = () => {
         color: 0x3149D5,
     })
 
+    const screenSize = 2;
     let objects : THREE.Mesh[] = [];
-    for(let x = -2; x <= 2; x++) {
-        for(let y = -2; y <= 2; y++) {
+    for(let x = -screenSize; x <= screenSize; x++) {
+        for(let y = -screenSize; y <= screenSize; y++) {
             const mesh = new THREE.Mesh(geometry, otherMaterial);
             mesh.position.set(x * 1.0, y * 1.0, Math.random() * -3);
             objects.push(mesh);
