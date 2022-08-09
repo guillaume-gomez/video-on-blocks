@@ -48,11 +48,11 @@ scene.add(camera);
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 const material = new THREE.MeshStandardMaterial({ map: colorTexture , color: 0x00Afff, wireframe: false });
 
-const plane = new THREE.PlaneGeometry(10,10);
+const plane = new THREE.PlaneGeometry(10, 10);
 
 const planeMesh = new THREE.Mesh(plane, material);
 planeMesh.rotateX(-Math.PI/2);
-planeMesh.position.set(0,-2,0);
+planeMesh.position.set(0,-2.5,0);
 scene.add(planeMesh);
 
 
