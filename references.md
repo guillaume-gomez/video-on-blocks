@@ -1,0 +1,1 @@
+https://codesandbox.io/s/ssr-test-8pbw1f?file=/src/Effects.js
