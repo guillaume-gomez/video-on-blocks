@@ -5,6 +5,7 @@ import * as dat from 'lil-gui';
 
 import './style.css';
 
+import { buildingFactory } from "./buildingFactory";
 import ProjectedMaterial from "./ProjectedMaterial";
 
 const loadingManager = new THREE.LoadingManager()
@@ -14,7 +15,7 @@ loadingManager.onStart = () =>
 }
 loadingManager.onLoad = () =>
 {
-    console.log('l oading finished')
+    console.log('loading finished')
 }
 loadingManager.onProgress = () =>
 {
@@ -26,7 +27,7 @@ loadingManager.onError = () =>
 }
 
 const textureLoader = new THREE.TextureLoader(loadingManager)
-const colorTexture = textureLoader.load('/textures/uv.jpg');
+const colorTexture = textureLoader.load('/textures/marble.jpg');
 
 
 // Sizes
@@ -45,8 +46,8 @@ camera.lookAt(0, 0, 0);
 scene.add(camera);
 
 // Object
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshStandardMaterial({ map: colorTexture , color: 0x00Afff, wireframe: false });
+const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+const material = new THREE.MeshStandardMaterial({ map: colorTexture , color: 0x00Afff, wireframe: false, roughness: 0 });
 
 const plane = new THREE.PlaneGeometry(10, 10);
 
@@ -66,14 +67,21 @@ const secondCamera = new THREE.PerspectiveCamera(45, 1, 0.01, 5)
 
 
 //Lights
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
 
-const pointLight = new THREE.PointLight(0xff9000, 0.5)
-scene.add(pointLight)
+const pointLight = new THREE.PointLight(0xff9000, 0.5);
+scene.add(pointLight);
 
-const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.2)
-scene.add(pointLightHelper)
+const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.2);
+scene.add(pointLightHelper);
+
+const pointLight2 = new THREE.PointLight(0xffff00, 0.5);
+pointLight2.position.set(0,3,1);
+scene.add(pointLight2);
+
+const pointLightHelper2 = new THREE.PointLightHelper(pointLight2, 0.2);
+scene.add(pointLightHelper2);
 
 // Axe Helper
 const axesHelper = new THREE.AxesHelper(2);
@@ -81,8 +89,9 @@ const axesHelper = new THREE.AxesHelper(2);
 
 const gui = new dat.GUI();
 gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001);
+gui.add(pointLight, 'intensity').min(0).max(1).step(0.001);
 //gui.add(pointLight.position, 'z');
-gui.add( secondCamera.position , 'z', -500, 500 ).step(5)
+gui.add( ambientLight.position , 'z', -500, 500 ).step(5)
 
 
 // Renderer
@@ -110,10 +119,10 @@ function tick()
     // Render
     renderer.render(scene, camera);
 
-    /*objects.forEach(object => {
+/*    objects.forEach(object => {
         object.rotation.y -= 0.003;
-    })
-*/
+    })*/
+
     // Call tick again on the next frame
     window.requestAnimationFrame(tick);
 
@@ -134,17 +143,8 @@ window.onload = () => {
         color: 0x3149D5,
     })
 
-    const screenSize = 2;
-    let objects : THREE.Mesh[] = [];
-    for(let x = -screenSize; x <= screenSize; x++) {
-        for(let y = -screenSize; y <= screenSize; y++) {
-            const mesh = new THREE.Mesh(geometry, otherMaterial);
-            mesh.position.set(x * 1.0, y * 1.0, Math.random() * -3);
-            objects.push(mesh);
-            scene.add(mesh);
-        }
-    }
-
+    const objects = buildingFactory(2, geometry, otherMaterial, "2pieces");
+    scene.add(...objects)
 
     tick();
 }
